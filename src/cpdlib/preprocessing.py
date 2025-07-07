@@ -1,4 +1,4 @@
-import re  # <-- 이 줄을 추가해 주세요.
+import re 
 import pandas as pd
 import numpy as np
 
@@ -57,6 +57,46 @@ def categorize_paper_final(countries_set):
         return 'China Only'
     else:
         return 'Other'
+
+#--- 지능형 월(Month) 추출  ---#
+def extract_month(date_str):
+    """
+    비정형 날짜 문자열에서 월(Month)을 추출하는 함수
+    """
+    if not isinstance(date_str, str):
+        return np.nan
+
+    # 대문자로 변환하고 공백 제거하여 처리 용이하게 만듦
+    s = date_str.upper().strip()
+
+    # 1. 월(Month) 이름과 숫자 매핑
+    month_map = {
+        'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
+        'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12
+    }
+
+    # 2. 계절(Season) 매핑 (북반구 기준 대표 월)
+    season_map = {'SPR': 3, 'SUM': 6, 'FAL': 9, 'WIN': 12}
+
+    # 3. 규칙 기반 월 추출
+    # 3-1. 월 범위 (예: 'JAN-MAR', 'JUL-DEC') -> 시작 월을 대표로 사용
+    range_match = re.search(r'([A-Z]{3})-[A-Z]{3}', s)
+    if range_match and range_match.group(1) in month_map:
+        return month_map[range_match.group(1)]
+
+    # 3-2. 계절 (예: 'SPR', 'SUM')
+    for season, month_num in season_map.items():
+        if season in s:
+            return month_num
+
+    # 3-3. 일반적인 월 이름 포함 여부 (가장 확실한 방법)
+    # 예: '12-OCT', 'SEPT', 'JULY15,' 등
+    for month_name, month_num in month_map.items():
+        if month_name in s:
+            return month_num
+
+    # 3-4. 모든 규칙에 해당하지 않으면 NaN 반환
+    return np.nan
 
 def create_analysis_data(df, analysis_type, time_col, category_col, 
                          time_unit='M', top_n=None, author_type=None):
