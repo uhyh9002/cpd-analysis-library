@@ -1,3 +1,6 @@
+import re  # <-- 이 줄을 추가해 주세요.
+import pandas as pd
+import numpy as np
 
 # --- 1. 국가 추출 함수 개선 ---
 def find_countries_improved(affiliation_string):
