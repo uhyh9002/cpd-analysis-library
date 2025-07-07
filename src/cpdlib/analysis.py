@@ -1,6 +1,9 @@
 # ==============================================================================
 # 섹션 3: 분석 및 시각화 실행 함수
 # ==============================================================================
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from .models import pelt_dirichlet
 
 def run_pelt_analysis_and_plot(proportions_df, time_unit_name, date_format_str, 
