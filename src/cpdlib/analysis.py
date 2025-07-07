@@ -1,6 +1,8 @@
 # ==============================================================================
 # 섹션 3: 분석 및 시각화 실행 함수
 # ==============================================================================
+from .models import pelt_dirichlet
+
 def run_pelt_analysis_and_plot(proportions_df, time_unit_name, date_format_str, 
                                penalty_method='BIC', penalty_weight=1.0, 
                                output_plot_path=None, output_csv_path=None):
