@@ -1,6 +1,11 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from random import sample
+import matplotlib.cm as cmx
+from scipy.stats import multinomial
+from scipy.special import gammaln
+from scipy.special import digamma
 
 # ==============================================================================
 # 섹션 2: 변화점 탐지(PELT) 모델링 함수
