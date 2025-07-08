@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # ==============================================================================
 # 섹션 2: 변화점 탐지(PELT) 모델링 함수
