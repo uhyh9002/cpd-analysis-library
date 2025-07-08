@@ -71,7 +71,7 @@ proportions_df = create_analysis_data(
 # 3-2. 가공 데이터가 있는 경우(예제)
 filepath_example = '/cpd-analysis-library/examples/proportions_example_M.csv' # 월간 예시 데이터
 #filepath_example = '/cpd-analysis-library/examples/proportions_example_2Q.csv' # 반기 예시 데이터
-df = pd.read_csv(filepath_example, encoding='cp949')
+proportions_df = pd.read_csv(filepath_example, encoding='cp949')
 
 # 4. 변화점 분석 및 시각화 실행
 run_pelt_analysis_and_plot(
