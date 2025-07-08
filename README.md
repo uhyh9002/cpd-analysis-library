@@ -39,14 +39,24 @@
 # 예제: 국가간 협업 관계를 반기별로 분석하고, 상위 5개 외에는 'Etc'로 그룹화
 
 import pandas as pd
-from cpdlib import create_analysis_data, run_pelt_analysis_and_plot
+from cpdlib import create_analysis_data, run_pelt_analysis_and_plot, preprocessing
 
 # 1. 원본 데이터 로드
-df = pd.read_csv('AI_Semi.csv', encoding='utf-8')
+
+filepath = 'AI_Semi.csv'
+df = pd.read_csv(filepath, encoding='cp949')
 
 # 2. 날짜 컬럼 기본 전처리
-df['YearMonth'] = pd.to_datetime(df['Publication Date'], errors='coerce').dt.to_period('M')
-df.dropna(subset=['YearMonth'], inplace=True)
+df['Month'] = df['Publication Date'].apply(preprocessing.extract_month)
+rows_before = len(df)
+df.dropna(subset=['Month'], inplace=True)
+rows_after = len(df)
+print(f"월 추출 성공 후 데이터 행 수: {rows_after}")
+print(f"제거된 행 수: {rows_before - rows_after}")
+
+# 'Publication Year'와 추출된 'Month'를 조합하여 'YearMonth' 생성
+df['Month'] = df['Month'].astype(int)
+df['YearMonth'] = pd.to_datetime(df['Publication Year'].astype(str) + '-' + df['Month'].astype(str)).dt.to_period('M')
 
 # 3. 분석 데이터 생성
 proportions_df = create_analysis_data(
@@ -57,6 +67,11 @@ proportions_df = create_analysis_data(
     time_unit='2Q', # 반기
     top_n=5         # 상위 5개 + Etc
 )
+
+# 3-2. 가공 데이터가 있는 경우(예제)
+filepath_example = '/cpd-analysis-library/examples/proportions_example_M.csv' # 월간 예시 데이터
+#filepath_example = '/cpd-analysis-library/examples/proportions_example_2Q.csv' # 반기 예시 데이터
+df = pd.read_csv(filepath_example, encoding='cp949')
 
 # 4. 변화점 분석 및 시각화 실행
 run_pelt_analysis_and_plot(
